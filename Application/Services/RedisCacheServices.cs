@@ -8,7 +8,7 @@ public class RedisCacheServices : IRedisCacheServices
     private readonly IConnectionMultiplexer _connectionMultiplexer;
     private readonly IDatabaseAsync _databaseAsync;
     
-    public RedisCacheServices(IConnectionMultiplexer connectionMultiplexer, IDatabaseAsync databaseAsync)
+    public RedisCacheServices(IConnectionMultiplexer connectionMultiplexer)
     {
         _connectionMultiplexer = connectionMultiplexer;
         _databaseAsync = connectionMultiplexer.GetDatabase();

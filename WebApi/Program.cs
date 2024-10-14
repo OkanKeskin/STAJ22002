@@ -49,12 +49,18 @@ public class Program
         builder.Services.AddScoped<ProjectContext>();
         builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
         
-        
 
         builder.Services.AddControllers();
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
+        
+        builder.Services.AddSingleton<IRedisCacheServices, RedisCacheServices>();  
+        
+        var redisConnection = ConnectionMultiplexer.Connect(configuration.GetConnectionString("RedisConnection"));
+        builder.Services.AddSingleton<IConnectionMultiplexer>(redisConnection);
+
+        
         
         builder.Services.AddDbContext<ProjectContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
         
@@ -67,9 +73,6 @@ public class Program
             app.UseSwagger();
             app.UseSwaggerUI();
         }
-
-        var redisConnection = ConnectionMultiplexer.Connect(configuration.GetConnectionString("RedisConnection"));
-        builder.Services.AddSingleton<IConnectionMultiplexer>(redisConnection);
         
         app.UseCors("CorsPolicy");
         app.UseHttpsRedirection();
